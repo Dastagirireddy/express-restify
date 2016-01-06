@@ -15,7 +15,7 @@
  *      Promise = require('bluebird');
  *  Promise.promisifyAll(mongoose);
  *  mongoose.connectAsync('mongodb://localhost:27017/dbname');
- *  var REST = require('node-rest')(app, mongoose);
+ *  var REST = require('express-restify')(app, mongoose);
  * step2:
  *  var UserSchema = new mongoose.Schema({name: String, password: String, etc,..});
  * step3:
