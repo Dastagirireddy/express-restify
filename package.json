@@ -1,6 +1,6 @@
 {
     "name": "express-restify",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "A node module for express rest full call with mongoose API.",
     "main": "express-restify.js",
     "scripts": {
@@ -23,6 +23,6 @@
     "dependencies": {
         "bluebird": "^3.1.1",
         "body-parser": "^1.14.2",
-        "express": "^4.13.3"
+        "mongoose": "^4.3.4"
     }
 }

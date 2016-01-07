@@ -16,4 +16,4 @@ REST.register('/api/users', 'User');
 ```
 ### Example
 <hr>
-Refer the sample application at the following link [test-express-restify](https://github.com/Dastagirireddy/test-express-restify)
+Refer the sample application at following link [test-express-restify](https://github.com/Dastagirireddy/test-express-restify)
