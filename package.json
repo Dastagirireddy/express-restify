@@ -1,6 +1,6 @@
 {
     "name": "express-restify",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "A node module for express rest full call with mongoose API.",
     "main": "express-restify.js",
     "scripts": {
