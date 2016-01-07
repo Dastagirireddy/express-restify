@@ -1,3 +1,9 @@
+var mongoose = require('mongoose'),
+    Promise = require('bluebird'),
+    bodyParser = require('body-parser');
+
+Promise.promisifyAll(mongoose);
+
 /**
  * Module
  * @param  {Object}
@@ -12,10 +18,8 @@
  * step1:
  *  var app = require('express')(),
  *      mongoose = require('mongoose'),
- *      Promise = require('bluebird');
- *  Promise.promisifyAll(mongoose);
- *  mongoose.connectAsync('mongodb://localhost:27017/dbname');
- *  var REST = require('express-restify')(app, mongoose);
+ *  mongoose.connect('mongodb://localhost:27017/dbname');
+ *  var REST = require('express-restify')(app);
  * step2:
  *  var UserSchema = new mongoose.Schema({name: String, password: String, etc,..});
  * step3:
@@ -23,7 +27,9 @@
  * step4:
  *  REST.register('/api/users', 'User');
  */
-module.exports = function(app, mongoose) {
+module.exports = function(app) {
+
+    app.use(bodyParser.json());
 
     /**
      * @class Model
@@ -179,4 +185,3 @@ module.exports = function(app, mongoose) {
 
     return new Model();
 };
-

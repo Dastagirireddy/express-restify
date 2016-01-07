@@ -1,6 +1,6 @@
 {
     "name": "express-restify",
-    "version": "1.0.3",
+    "version": "1.1.0",
     "description": "A node module for express rest full call with mongoose API.",
     "main": "express-restify.js",
     "scripts": {
@@ -19,5 +19,10 @@
     "bugs": {
         "url": "https://github.com/Dastagirireddy/express-restify/issues"
     },
-    "homepage": "https://github.com/Dastagirireddy/express-restify#readme"
+    "homepage": "https://github.com/Dastagirireddy/express-restify#readme",
+    "dependencies": {
+        "bluebird": "^3.1.1",
+        "body-parser": "^1.14.2",
+        "express": "^4.13.3"
+    }
 }
