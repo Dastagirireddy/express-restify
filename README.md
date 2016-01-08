@@ -38,7 +38,7 @@ Create a REST middleware with the given `options`.
 An url of the route for REST service.
 
 #####model
-Model name of a `mongoose collection'.
+Model name of a `mongoose collection`.
 
 #####restrict
 An array to `restrict` the properties while retrieving the data from the database. 

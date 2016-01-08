@@ -1,8 +1,8 @@
 {
     "name": "express-restify",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "description": "A node module for express rest full call with mongoose API.",
-    "main": "express-restify.js",
+    "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },

@@ -25,7 +25,7 @@ Promise.promisifyAll(mongoose);
  * step3:
  *  var UserModel = mongoose.model('User', UserSchema, 'users');
  * step4:
- *  REST.register('/api/users', 'User');
+ *  REST.register({url: '/api/users', model: 'User'});
  */
 module.exports = function(app) {
 
@@ -66,7 +66,19 @@ module.exports = function(app) {
      * @param {String}
      * @description Accepts url and model name perform major get, put, delete and post funcatinolities.
      */
-    function Register(url, modelName, options) {
+    function Register(options) {
+
+        var url, modelName;
+
+        if(typeof options === 'object') {
+
+            url = options.url;
+            modelName = options.model;
+            restrict = options.restrict;
+        } else {
+
+            throw new Error('Exprected an Object but got an ' + typeof options);
+        }
 
         if(!url) {
 
@@ -79,7 +91,7 @@ module.exports = function(app) {
         var modelObj = mongoose.model(modelName),
             schema = mongoose.model(modelName).schema;
 
-        if(options && options.restrict && Array.isArray(options.restrict)) {
+        if(restrict && Array.isArray(restrict)) {
 
             options['restrict'].forEach(function(index) {
 
