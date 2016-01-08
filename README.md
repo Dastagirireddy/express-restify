@@ -1,7 +1,12 @@
 #express-restify 
-<hr>
 A module for making REST full calls easy with mongoose and express.
 
+##Install
+      ```
+      
+      $     npm install express-restify
+      ```
+      
 ##How to use express-restify ?
 
 ```js
@@ -15,5 +20,4 @@ var UserModel = mongoose.model('User', UserSchema, 'users');
 REST.register('/api/users', 'User');
 ```
 ### Example
-<hr>
 Refer the sample application at following link [test-express-restify](https://github.com/Dastagirireddy/test-express-restify)
