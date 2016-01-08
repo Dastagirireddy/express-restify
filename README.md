@@ -1,5 +1,7 @@
-#express-restify 
+#express-restify <hr>
 A module for making REST full calls easy with mongoose and express.
+
+***
 
 ##Install
 
@@ -9,22 +11,28 @@ $ npm install express-restify
 ```
 
 ##Database && Framework
-	```
-	express-restify
-	```   
-	suited for 
-	```
-	mongodb
-	```
-	database using 
-	```
-	mongoose
-	```
-	API and suited for 
-	```
-	express
-	```
-	framework.
+
+```
+express-restify
+```   
+suited for 
+
+```
+mongodb
+```
+database using 
+
+```
+mongoose
+```
+
+API and suited for 
+
+```
+express
+```
+
+framework.
 
 ##How to use express-restify ?
 
