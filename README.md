@@ -43,7 +43,7 @@ Model name of a `mongoose collection`.
 #####restrict
 An array to `restrict` the properties while retrieving the data from the database. 
 
-```
+```js
 REST.register({
       url: '/api/users',
       model: 'User',
