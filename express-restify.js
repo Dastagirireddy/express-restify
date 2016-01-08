@@ -29,6 +29,11 @@ Promise.promisifyAll(mongoose);
  */
 module.exports = function(app) {
 
+    if(!app) {
+
+        throw new Error('Instance of an express framework is required..!');
+    }
+
     app.use(bodyParser.json());
 
     /**
@@ -61,126 +66,189 @@ module.exports = function(app) {
      * @param {String}
      * @description Accepts url and model name perform major get, put, delete and post funcatinolities.
      */
-    function Register(url, modelName) {
+    function Register(url, modelName, options) {
+
+        if(!url) {
+
+            throw new Error('Url is required..!');
+        } else if(!modelName) {
+
+            throw new Error('Model name is required..!');
+        }
 
         var modelObj = mongoose.model(modelName),
             schema = mongoose.model(modelName).schema;
 
+        if(options && options.restrict && Array.isArray(options.restrict)) {
+
+            options['restrict'].forEach(function(index) {
+
+                schema.paths[index].options['select'] = false;
+                schema.paths[index]['selected'] = false;
+            });
+        }
+
         var keys = Object.keys(schema.paths);
+
+        /**
+         * [findById - To query the records based on _id]
+         * @param  {Object}   req  [request]
+         * @param  {Object}   res  [response]
+         * @param  {Function} next [callback]
+         * @return {Json}        [returns json data]
+         */
+        function findById(req, res, next) {
+
+            var id = req.params.id;
+
+            modelObj
+                .findByIdAsync(id)
+                .then(function(result) {
+
+                    res.json(result);
+                })
+                .catch(function(error) {
+
+                    next();
+                });
+        }
+
+        /**
+         * [findByIdAndRemove - To query the record based on _id and remove the document]
+         * @param  {Object}   req  [request]
+         * @param  {Object}   res  [response]
+         * @param  {Function} next [callback]
+         * @return {Json}        [returns json data]
+         */
+        function findByIdAndRemove(req, res, next) {
+
+            var id = req.params.id;
+            modelObj
+                .findByIdAndRemoveAsync(id)
+                .then(function(result) {
+
+                    res.json({
+                        message: 'user deleted successfully.'
+                    });
+                })
+                .catch(function(err) {
+
+                    next();
+                });
+        }
+
+        /**
+         * [findByIdAndUpdate - To query the record based on _id and update the document]
+         * @param  {Object}   req  [request]
+         * @param  {Object}   res  [response]
+         * @param  {Function} next [callback]
+         * @return {Json}        [returns json data]
+         */
+        function findByIdAndUpdate(req, res, next) {
+
+            var id = req.params.id;
+            var obj = req.body;
+
+            for(var i in obj) {
+
+                if(i === '_id' || i === '__v') {
+
+                    delete obj[i];
+                }
+            }
+
+            modelObj
+                .findByIdAsync(id)
+                .then(function(result) {
+
+                    for(var key in obj) {
+
+                        if(keys.indexOf(key) > -1) {
+
+                            result[key] = obj[key];
+                        }
+                    }
+                    return result.saveAsync();
+                })
+                .then(function(data) {
+
+                    res.json(data);
+                })
+                .catch(function(err) {
+
+                    next();
+                });
+        }
+
+        /**
+         * [save - To save document in the database]
+         * @param  {Object}   req  [request]
+         * @param  {Object}   res  [response]
+         * @param  {Function} next [callback]
+         * @return {Json}        [returns json data]
+         */
+        function save(req, res, next) {
+
+            var obj = req.body;
+            var model = new modelObj();
+
+            for(var key in obj) {
+
+                if(keys.indexOf(key) > -1) {
+
+                    model[key] = obj[key];
+                }
+            }
+
+            model
+                .saveAsync()
+                .then(function(result) {
+
+                    res.json(result);
+                })
+                .catch(function(error) {
+
+                    next();
+                });
+        }
+
+        /**
+         * [findAll - To collect all the documents]
+         * @param  {Object}   req  [request]
+         * @param  {Object}   res  [response]
+         * @param  {Function} next [callback]
+         * @return {Json}        [returns json data]
+         */
+        function findAll(req, res, next) {
+
+            modelObj
+                .findAsync({})
+                .then(function(result) {
+
+                    res.json(result);
+                })
+                .catch(function(error) {
+
+                    next();
+                });
+        }
 
         /**
          * @router
          * @description perform PUT, DELETE and GET operations (works with ID).
          */
         app.route(url + '/:id')
-            .get(function(req, res, next) {
-
-                var id = req.params.id;
-                modelObj
-                    .findByIdAsync(id)
-                    .then(function(result) {
-
-                        res.json(result);
-                    })
-                    .catch(function(error) {
-
-                        next();
-                    });
-            }, errorHandler)
-            .delete(function(req, res, next) {
-
-                var id = req.params.id;
-                modelObj
-                    .findByIdAndRemoveAsync(id)
-                    .then(function(result) {
-
-                        res.json({
-                            message: 'user deleted successfully.'
-                        });
-                    })
-                    .catch(function(err) {
-
-                        next();
-                    });
-            }, errorHandler)
-            .put(function(req, res, next) {
-
-                var id = req.params.id;
-                var obj = req.body;
-
-                for(var i in obj) {
-
-                    if(i === '_id' || i === '__v') {
-
-                        delete obj[i];
-                    }
-                }
-
-                modelObj
-                    .findByIdAsync(id)
-                    .then(function(result) {
-
-                        for(var key in obj) {
-
-                            if(keys.indexOf(key) > -1) {
-
-                                result[key] = obj[key];
-                            }
-                        }
-                        return result.saveAsync();
-                    })
-                    .then(function(data) {
-
-                        res.json(data);
-                    })
-                    .catch(function(err) {
-
-                        next();
-                    });
-            }, errorHandler);
+            .get(findById, errorHandler)
+            .delete(findByIdAndRemove, errorHandler)
+            .put(findByIdAndUpdate, errorHandler);
 
         /**
          * @router
          * @description perform GET and POST operations.
          */
         app.route(url)
-            .post(function(req, res, next) {
-
-                var obj = req.body;
-                var model = new modelObj();
-
-                for(var key in obj) {
-
-                    if(keys.indexOf(key) > -1) {
-
-                        model[key] = obj[key];
-                    }
-                }
-
-                model
-                    .saveAsync()
-                    .then(function(result) {
-
-                        res.json(result);
-                    })
-                    .catch(function(error) {
-
-                        next();
-                    });
-            }, errorHandler)
-            .get(function(req, res, next) {
-
-                modelObj
-                    .findAsync({})
-                    .then(function(result) {
-
-                        res.json(result);
-                    })
-                    .catch(function(error) {
-
-                        next();
-                    });
-            }, errorHandler);
+            .post(save, errorHandler)
+            .get(findAll, errorHandler);
     }
 
     return new Model();
